@@ -9,7 +9,12 @@ export const reqCategoryList = () => {
   return requests({ url: '/product/getBaseCategoryList', method: 'get' })
 }
 
-//轮播图接口 mock
+//主页轮播图接口 mock
 export const reqBannerList = () => {
   return mockRequsets({ url: '/banner', method: 'get' })
+}
+
+//floor数据接口
+export const reqFloorList = () => {
+  return mockRequsets({ url: '/floor', method: 'get' })
 }
