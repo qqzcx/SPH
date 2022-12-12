@@ -1,6 +1,7 @@
 <template>
   <div>
     <typeNav></typeNav>
+   搜索页面
   </div>
 </template>
 <script>

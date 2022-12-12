@@ -102,15 +102,22 @@ export default {
                     query.category3Id = caregory3id
                     console.log('三级菜单');
                 }
-                //整理完参数
-                location.query = query
-                console.log(location)
-                console.log(this.$route)
-                console.log(this.$router)
+                //整理完参数 
+                // console.log(location)
                 //路由跳转
                 //要先进行判断 如果有params参数也要带进去
+                if(this.$route.params.keyword){
+                    console.log('params有参数')
+                    location.params = this.$route.params 
+                    location.query = query
+                    this.$router.push(location)
+                } else {
+                    console.log('params无参数')
+                    location.query = query
+                    this.$router.push(location)
+                }
 
-                this.$router.push(location)
+               
             }
         },
         //当鼠标移入时 让商品列表进行展示

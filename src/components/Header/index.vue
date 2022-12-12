@@ -27,9 +27,10 @@
             <!--头部第二行 搜索区域-->
             <div class="bottom">
                 <h1 class="logoArea">
-                    <router-link class="logo" to="./home">
+                    <!-- <router-link class="logo" to="./home">
                         <img src="./images/logo.png" alt="">
-                    </router-link>
+                    </router-link> -->
+                    <div @click="goHome"><img src="./images/logo.png"></img></div>
                 </h1>
                 <div class="searchArea">
                     <form action="###" class="searchForm">
@@ -59,13 +60,20 @@ export default {
             //第二种:模板字符串
             // this.$router.push(`/search/${this.keyword }?k=${this.keyword}`)
             //第三种:对象
-            console.log(this.$route.params.keyword === '')
-             this.$router.push({
+        
+            //如果有query参数也要带进去 先整合
+            console.log(this.$route.query)
+            const location = {
                 name:'search',
                 // 使用对象形式不能使用path传递params参数,必须命名name
                 // path:'/search',  
-                params:{keyword:this.keyword}
-             }) 
+                params:{keyword:this.keyword || undefined},
+                query:this.$route.query
+            }
+            this.$router.push(location) 
+        },
+        goHome(){
+            this.$router.push({path:'/home'})
         }
     }
 }
