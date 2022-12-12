@@ -33,7 +33,7 @@
                 </h1>
                 <div class="searchArea">
                     <form action="###" class="searchForm">
-                        <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword" />
+                        <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model.trim="keyword" />
     
                         <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">搜索</button>
                     </form>
@@ -59,12 +59,12 @@ export default {
             //第二种:模板字符串
             // this.$router.push(`/search/${this.keyword }?k=${this.keyword}`)
             //第三种:对象
+            console.log(this.$route.params.keyword === '')
              this.$router.push({
                 name:'search',
                 // 使用对象形式不能使用path传递params参数,必须命名name
                 // path:'/search',  
-                params:{keyword:this.keyword},
-                query:{k:this.keyword}
+                params:{keyword:this.keyword}
              }) 
         }
     }
