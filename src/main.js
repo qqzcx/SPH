@@ -5,7 +5,13 @@ import VueRouter from 'vue-router';
 // 三级联动组件
 import TypeNav from '@/components/TypeNav'
 //第一个参数 全局组件的名字  第二个参数 哪一个组件
-Vue.component(TypeNav.name,TypeNav)
+Vue.component(TypeNav.name, TypeNav)
+
+//引入MockServer.js  mock数据
+import '@/mock/mockServe';
+
+//引入swiper轮播图样式
+import 'swiper/css/swiper.css';
 
 //引入路由
 import router from '@/router';
@@ -27,7 +33,7 @@ import store from '@/store';
 new Vue({
   render: h => h(App),
   //注册路由:组件实例身上会多一个$route,$router属性
-  router:router,
+  router: router,
   //注册仓库:组件实例的身上会多一个$store属性
-  store:store,
+  store: store,
 }).$mount('#app')
