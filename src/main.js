@@ -16,9 +16,6 @@ import 'swiper/css/swiper.css';
 //引入路由
 import router from '@/router';
 
-// import {reqCategoryList} from '@/api';
-// let a = reqCategoryList();
-// console.log(a);
 
 //使用路由
 Vue.use(VueRouter);

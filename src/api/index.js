@@ -18,3 +18,8 @@ export const reqBannerList = () => {
 export const reqFloorList = () => {
   return mockRequsets({ url: '/floor', method: 'get' })
 }
+
+//search数据接口 给服务器传递一个默认参数（至少是一个空对象）
+export const reqGetSearchData = (params) => {
+  return requests({ url: '/list', method: 'post', data: params })
+}

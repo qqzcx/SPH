@@ -75,7 +75,16 @@ export default {
         goHome(){
             this.$router.push({path:'/home'})
         }
-    }
+    },
+     watch: {
+         $route() {
+            //监听search组件中删除关键字面包屑里的路由变化 清空搜索框的keyword
+             if (this.$route.params.keyword === undefined || this.$route.params.keyword === '') {
+                this.keyword = ''
+        }
+    
+    },
+  },
 }
 
 </script>

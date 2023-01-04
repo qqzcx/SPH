@@ -94,28 +94,28 @@ export default {
 
                 if (caregory1id) {  //区分一级 二级 三级 菜单
                     query.category1Id = caregory1id
-                    console.log('一级菜单');
+                    // console.log('一级菜单');
                 } else if (caregory2id) {
                     query.category2Id = caregory2id
-                    console.log('二级菜单');
+                    // console.log('二级菜单');
                 } else if (caregory3id) {
                     query.category3Id = caregory3id
-                    console.log('三级菜单');
+                    // console.log('三级菜单');
                 }
                 //整理完参数 
                 // console.log(location)
                 //路由跳转
                 //要先进行判断 如果有params参数也要带进去
-                if(this.$route.params.keyword){
-                    console.log('params有参数')
-                    location.params = this.$route.params 
+                // if(this.$route.params.keyword){
+                //     // console.log('params有参数')
+                //     location.params = this.$route.params 
+                //     location.query = query
+                //     this.$router.push(location)
+                // } else {
+                    // console.log('params无参数')
                     location.query = query
                     this.$router.push(location)
-                } else {
-                    console.log('params无参数')
-                    location.query = query
-                    this.$router.push(location)
-                }
+                // }
 
                
             }
@@ -141,7 +141,7 @@ export default {
                 return state.home.categoryList
             }
         })
-    }
+    },
 }
 </script>
 <style scoped lang="less">
