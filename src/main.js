@@ -16,6 +16,10 @@ import 'swiper/css/swiper.css';
 //引入路由
 import router from '@/router';
 
+//引入ElementUI
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI, { size: 'small', zIndex: 3000 });
 
 //使用路由
 Vue.use(VueRouter);

@@ -44,21 +44,15 @@
               }}<i @click="removeTrademark">×</i>
             </li>
             <!-- 属性面包屑-->
-            <div
-              v-if="
-                searchParams.props.length !== 0 &&
-                searchParams.props !== undefined
-              "
+
+            <li
+              class="with-x"
+              v-for="(item, index) in searchParams.props"
+              :key="index"
             >
-              <li
-                class="with-x"
-                v-for="(item, index) in searchParams.props"
-                :key="index"
-              >
-                {{ item.split(":")[1] }}:{{ item.split(":")[2]
-                }}<i @click="removeProps(index)">×</i>
-              </li>
-            </div>
+              {{ item.split(":")[2] }}:{{ item.split(":")[1]
+              }}<i @click="removeProps(index)">×</i>
+            </li>
           </ul>
         </div>
 
@@ -70,23 +64,17 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li
+                  :class="{ active: this.searchParams.order.includes('1') }"
+                  @click="zonghe"
+                >
+                  <a href="#">{{ zh }}</a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li
+                  :class="{ active: this.searchParams.order.includes('2') }"
+                  @click="jiage"
+                >
+                  <a href="#">{{ jg }}</a>
                 </li>
               </ul>
             </div>
@@ -97,7 +85,7 @@
               <li class="yui3-u-1-5" v-for="good in goodsList" :key="good.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
+                    <a @click="goDetail(good.id)"
                       ><img :src="good.defaultImg"
                     /></a>
                   </div>
@@ -108,7 +96,7 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a target="_blank" href="item.html" :title="good.title">{{
+                    <a @click="goDetail(good.id)" :title="good.title">{{
                       good.title
                     }}</a>
                   </div>
@@ -116,12 +104,7 @@
                     <i class="command">已有<span>2000</span>人评价</i>
                   </div>
                   <div class="operate">
-                    <a
-                      href="success-cart.html"
-                      target="_blank"
-                      class="sui-btn btn-bordered btn-danger"
-                      >加入购物车</a
-                    >
+                    <a class="sui-btn btn-bordered btn-danger">加入购物车</a>
                     <a href="javascript:void(0);" class="sui-btn btn-bordered"
                       >收藏</a
                     >
@@ -130,7 +113,8 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
+          <!-- 分页器 -->
+          <!-- <div class="fr page">
             <div class="sui-pagination clearfix">
               <ul>
                 <li class="prev disabled">
@@ -158,6 +142,16 @@
               </ul>
               <div><span>共10页&nbsp;</span></div>
             </div>
+          </div> -->
+          <div class="page">
+            <el-pagination
+              background
+              :page-size="pageSize"
+              layout="prev, pager, next"
+              :total="total"
+              @current-change="current"
+            >
+            </el-pagination>
           </div>
         </div>
       </div>
@@ -182,12 +176,14 @@ export default {
         category3Id: "",
         categoryName: "",
         keyword: "",
-        order: "",
+        order: "1:desc",
         pageNo: 1,
         pageSize: 10,
         props: [],
         trademark: "",
       },
+      zh: "综合↑",
+      jg: "价格",
     };
   },
   methods: {
@@ -236,8 +232,10 @@ export default {
       console.log(id, name, value);
       //整理添加字段
       let str = `${id}:${value}:${name}`;
+
+      //数组去重 方法一
       let flag = true;
-      //判断this.searchParams.props数组长度 如果为0则直接添加 否则判断添加或者替换
+      // 判断this.searchParams.props数组长度 如果为0则直接添加 否则判断添加或者替换
       if (this.searchParams.props.length === 0) {
         this.searchParams.props.push(str);
         flag = false;
@@ -255,8 +253,58 @@ export default {
       if (flag) {
         this.searchParams.props.push(str);
       }
+      //数组去重 方法二 includes方法
+      // 1.数组 字符串也同理
+      // includes 可以判断一个数组中是否包含某一个元素，并返回true 或者false
+      // ['a','b','c'].includes('a')
+      // true
+
       //再次发送请求
       this.getData();
+    },
+    //综合排序
+    zonghe() {
+      if (
+        this.searchParams.order.includes("desc") ||
+        this.searchParams.order === ""
+      ) {
+        this.searchParams.order = "1:asc";
+        this.zh = "综合↑";
+        this.jg = "价格";
+        this.getData();
+      } else {
+        this.searchParams.order = "1:desc";
+        this.zh = "综合↓";
+        this.jg = "价格";
+        this.getData();
+      }
+    },
+    jiage() {
+      if (
+        this.searchParams.order.includes("desc") ||
+        this.searchParams.order === ""
+      ) {
+        this.searchParams.order = "2:asc";
+        this.jg = "价格↑";
+        this.zh = "综合";
+        this.getData();
+      } else {
+        this.searchParams.order = "2:desc";
+        this.jg = "价格↓";
+        this.zh = "综合";
+        this.getData();
+      }
+    },
+    //分页器页数改变
+    current(pageNo) {
+      console.log("current", pageNo);
+      this.searchParams.pageNo = pageNo;
+      this.getData();
+    },
+    //跳转商品详情
+    goDetail(id) {
+      // console.log(id);
+      this.$router.push({ name: 'detail', params: { skuid: id } })
     },
   },
   beforeMount() {
@@ -345,6 +393,10 @@ export default {
         padding: 5px 0 0;
         margin-bottom: 18px;
         float: left;
+
+        .zcx {
+          display: inline-block;
+        }
 
         .with-x {
           font-size: 12px;
@@ -546,91 +598,94 @@ export default {
         }
       }
 
+      // .page {
+      //   width: 733px;
+      //   height: 66px;
+      //   overflow: hidden;
+      //   float: right;
+
+      //   .sui-pagination {
+      //     margin: 18px 0;
+
+      //     ul {
+      //       margin-left: 0;
+      //       margin-bottom: 0;
+      //       vertical-align: middle;
+      //       width: 490px;
+      //       float: left;
+
+      //       li {
+      //         line-height: 18px;
+      //         display: inline-block;
+
+      //         a {
+      //           position: relative;
+      //           float: left;
+      //           line-height: 18px;
+      //           text-decoration: none;
+      //           background-color: #fff;
+      //           border: 1px solid #e0e9ee;
+      //           margin-left: -1px;
+      //           font-size: 14px;
+      //           padding: 9px 18px;
+      //           color: #333;
+      //         }
+
+      //         &.active {
+      //           a {
+      //             background-color: #fff;
+      //             color: #e1251b;
+      //             border-color: #fff;
+      //             cursor: default;
+      //           }
+      //         }
+
+      //         &.prev {
+      //           a {
+      //             background-color: #fafafa;
+      //           }
+      //         }
+
+      //         &.disabled {
+      //           a {
+      //             color: #999;
+      //             cursor: default;
+      //           }
+      //         }
+
+      //         &.dotted {
+      //           span {
+      //             margin-left: -1px;
+      //             position: relative;
+      //             float: left;
+      //             line-height: 18px;
+      //             text-decoration: none;
+      //             background-color: #fff;
+      //             font-size: 14px;
+      //             border: 0;
+      //             padding: 9px 18px;
+      //             color: #333;
+      //           }
+      //         }
+
+      //         &.next {
+      //           a {
+      //             background-color: #fafafa;
+      //           }
+      //         }
+      //       }
+      //     }
+
+      //     div {
+      //       color: #333;
+      //       font-size: 14px;
+      //       float: right;
+      //       width: 241px;
+      //     }
+      //   }
+      // }
       .page {
-        width: 733px;
-        height: 66px;
-        overflow: hidden;
-        float: right;
-
-        .sui-pagination {
-          margin: 18px 0;
-
-          ul {
-            margin-left: 0;
-            margin-bottom: 0;
-            vertical-align: middle;
-            width: 490px;
-            float: left;
-
-            li {
-              line-height: 18px;
-              display: inline-block;
-
-              a {
-                position: relative;
-                float: left;
-                line-height: 18px;
-                text-decoration: none;
-                background-color: #fff;
-                border: 1px solid #e0e9ee;
-                margin-left: -1px;
-                font-size: 14px;
-                padding: 9px 18px;
-                color: #333;
-              }
-
-              &.active {
-                a {
-                  background-color: #fff;
-                  color: #e1251b;
-                  border-color: #fff;
-                  cursor: default;
-                }
-              }
-
-              &.prev {
-                a {
-                  background-color: #fafafa;
-                }
-              }
-
-              &.disabled {
-                a {
-                  color: #999;
-                  cursor: default;
-                }
-              }
-
-              &.dotted {
-                span {
-                  margin-left: -1px;
-                  position: relative;
-                  float: left;
-                  line-height: 18px;
-                  text-decoration: none;
-                  background-color: #fff;
-                  font-size: 14px;
-                  border: 0;
-                  padding: 9px 18px;
-                  color: #333;
-                }
-              }
-
-              &.next {
-                a {
-                  background-color: #fafafa;
-                }
-              }
-            }
-          }
-
-          div {
-            color: #333;
-            font-size: 14px;
-            float: right;
-            width: 241px;
-          }
-        }
+        text-align: center;
       }
     }
   }
