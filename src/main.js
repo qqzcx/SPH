@@ -37,4 +37,7 @@ new Vue({
   router: router,
   //注册仓库:组件实例的身上会多一个$store属性
   store: store,
+  beforeCreate() {
+    Vue.prototype.$bus = this	//安装全局事件总线
+  }
 }).$mount('#app')

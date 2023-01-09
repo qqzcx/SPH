@@ -321,7 +321,7 @@ export default {
   mounted() {
     //向服务器发送请求 通知Vuex把获取的floor数据存放到仓库当中
     this.getData();
-    console.log(this.searchParams);
+    // console.log(this.searchParams);
   },
   computed: {
     //mapGetters里面的写法：传递的数组 因为getters计算没有分模块

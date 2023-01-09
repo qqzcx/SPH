@@ -23,3 +23,8 @@ export const reqFloorList = () => {
 export const reqGetSearchData = (params) => {
   return requests({ url: '/list', method: 'post', data: params })
 }
+
+//detail数据接口 给服务器传递一个skuid String类型 /api/item/{ skuId }
+export const reqDetailData = (skuId) => {
+  return requests({ url: `/item/${skuId}`,method:'get' })
+}
