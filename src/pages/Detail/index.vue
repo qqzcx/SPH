@@ -88,8 +88,8 @@
                 <dd
                   v-for="obj2 in obj.spuSaleAttrValueList"
                   :key="obj2.id"
-                  :class="{ active :obj2.isChecked === '1' }"
-                  @click="changeActive(obj.spuSaleAttrValueList,obj2)"
+                  :class="{ active: obj2.isChecked === '1' }"
+                  @click="changeActive(obj.spuSaleAttrValueList, obj2)"
                 >
                   {{ obj2.saleAttrValueName }}
                 </dd>
@@ -99,12 +99,23 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <el-input
+                  v-model.number="number"
+                  size="small"
+                  maxlength="3"
+                  @change="checkNumber"
+                ></el-input>
+                <!-- <input v-model.number="number" type="number" autocomplete="off" class="itxt" /> -->
+                <!-- <a href="javascript:" class="plus">+</a>
+                <a href="javascript:" class="mins">-</a> -->
+                <div class="plus" @click="number++">+</div>
+                <div class="mins" @click="number > 1 ? number-- : number">
+                  -
+                </div>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <!-- 以前咱们的路由跳转 A路由→B路由 此处加入购物车跳转路由前 向服务器发送请求将数据储存后再跳转 -->
+                <a @click="addShopCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -353,7 +364,9 @@ export default {
     Zoom,
   },
   data() {
-    return {};
+    return {
+      number: 1, //商品数量
+    };
   },
   mounted() {
     // console.log((this.$route.params.skuid).toString());
@@ -365,11 +378,49 @@ export default {
       //排他思想
       //先把大数组arr里所有对象的isChecked设置为0
       for (let index = 0; index < arr.length; index++) {
-        arr[index].isChecked = '0'
+        arr[index].isChecked = "0";
       }
       //再把点击的obj中isChecked设置为1
-      obj.isChecked = '1'
-    }
+      obj.isChecked = "1";
+    },
+    //校验number数据
+    checkNumber() {
+      //number小于1则改为1
+      if (this.number < 1) {
+        this.number = 1;
+      }
+      //number不是数字则改为1
+      if (isNaN(this.number * 1)) {
+        this.number = 1;
+      }
+    },
+    //加入购物车
+    addShopCart() {
+      //1.先发请求 将产品加入到数据库(通知服务器)
+      //2.服务器存储成功 路由跳转并传参
+      //3.失败 给用户提示
+      // console.log(this.$route.params.skuid.toString(), this.number.toString());
+      this.$store.dispatch("addOrUpdateShopCart", {
+        skuId: this.$route.params.skuid.toString(),
+        skuNum: this.number.toString(),
+        code: (code) => {
+          if (code === 200) {
+            // console.log("存储成功，路由跳转");
+            //4.路由跳转的时候还要把产品信息skuId和skuInfo带给下一个组件
+            // 简单的数据 skuId 用 query直接传递
+            // 复杂的数据 通过会话存储 传递
+            sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
+            sessionStorage.setItem("SPUSALAATTRLIST", JSON.stringify(this.spuSaleAttrList));
+            this.$router.push({
+              name: "addcartsuccess",
+              query: { skuNum:this.number.toString() },
+            });
+          } else {
+            alert("添加购物车失败");
+          }
+        },
+      });
+    },
   },
   computed: {
     ...mapState({
@@ -564,6 +615,10 @@ export default {
               float: left;
               margin-right: 15px;
 
+              ::v-deep .el-input__inner {
+                padding: 0 8px;
+                width: 90%;
+              }
               .itxt {
                 width: 38px;
                 height: 37px;
@@ -588,13 +643,14 @@ export default {
               }
 
               .mins {
-                right: -8px;
+                right: -12px;
                 top: 19px;
                 border-top: 0;
               }
 
               .plus {
-                right: -8px;
+                right: -12px;
+                top: 0px;
               }
             }
 

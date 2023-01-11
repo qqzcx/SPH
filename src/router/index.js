@@ -7,6 +7,8 @@ import Search from '@/pages/Search'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import Detail from '@/pages/Detail'
+import AddCartSuccess from '@/pages/AddCartSuccess'
+import ShopCart from '@/pages/ShopCart'
 
 //备份push replace 方法
 let oldPush = VueRouter.prototype.push;
@@ -42,13 +44,13 @@ export default new VueRouter({
     {
       path: "/home",
       component: Home,
-      meta: { showFooter: true, show: true }
+      meta: { showFooter: true, show: true } //显示Footer组件
     },
     {
       //  /:keyword 为params参数 需要占位 若要指定params可传可不传 在后面加一个？
       path: "/search/:keyword?",
       component: Search,
-      meta: { showFooter: true, show: true },
+      meta: { showFooter: true, show: true },//显示Footer组件
       name: 'search'
     },
     {
@@ -63,6 +65,18 @@ export default new VueRouter({
       path: "/detail/:skuid?",
       component: Detail,
       name: 'detail'
+    },
+    {
+      path: "/addcartsuccess",
+      component: AddCartSuccess,
+      name: 'addcartsuccess',
+      meta: { showFooter: true, show: true },//显示Footer组件
+    },
+    {
+      path: "/shopcart",
+      component: ShopCart,
+      name: "shopcart",
+      meta: { showFooter: true, show: true },//显示Footer组件
     },
     //路由重定向 在项目运行时 访问/立马跳转到首页home
     {

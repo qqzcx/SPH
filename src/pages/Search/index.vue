@@ -229,7 +229,6 @@ export default {
     },
     //自定义attr事件获取子组件SearchSelector中的attr参数
     attr(id, name, value) {
-      console.log(id, name, value);
       //整理添加字段
       let str = `${id}:${value}:${name}`;
 

@@ -62,7 +62,7 @@ export default {
             //第三种:对象
         
             //如果有query参数也要带进去 先整合
-            console.log(this.$route.query)
+            // console.log(this.$route.query)
             const location = {
                 name:'search',
                 // 使用对象形式不能使用path传递params参数,必须命名name
