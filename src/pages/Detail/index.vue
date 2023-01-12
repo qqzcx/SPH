@@ -369,10 +369,17 @@ export default {
     };
   },
   mounted() {
-    // console.log((this.$route.params.skuid).toString());
-    this.$store.dispatch("getDetailData", this.$route.params.skuid.toString());
-    // console.log(this.detailData);
+    //调用接口获取商品信息
+    this.$store.dispatch("getDetailData", {
+      skuId: this.$route.params.skuid.toString(),
+      code: (code) => {
+        if (code === 200) {
+          // console.log('mounted中调用接口成功');
+       }
+      },
+    });
   },
+  updated() {},
   methods: {
     changeActive(arr, obj) {
       //排他思想
@@ -409,11 +416,19 @@ export default {
             //4.路由跳转的时候还要把产品信息skuId和skuInfo带给下一个组件
             // 简单的数据 skuId 用 query直接传递
             // 复杂的数据 通过会话存储 传递
+            // skuInfo 产品信息 spuSaleAttrList 产品售卖属性  spuSaleAttrValueList 用户选择的产品属性
             sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
-            sessionStorage.setItem("SPUSALAATTRLIST", JSON.stringify(this.spuSaleAttrList));
+            sessionStorage.setItem(
+              "SPUSALEATTRLIST",
+              JSON.stringify(this.spuSaleAttrList)
+            );
+            sessionStorage.setItem(
+              "SPUSALEATTRVALUELIST",
+              JSON.stringify(this.spuSaleAttrValueList)
+            );
             this.$router.push({
               name: "addcartsuccess",
-              query: { skuNum:this.number.toString() },
+              query: { skuNum: this.number.toString() },
             });
           } else {
             alert("添加购物车失败");
@@ -440,7 +455,28 @@ export default {
     },
     //产品售卖
     spuSaleAttrList() {
+      // console.log('spuSaleAttrList计算属性');
       return this.detailData.spuSaleAttrList || [];
+    },
+    //用户选择的产品属性
+    spuSaleAttrValueList() {
+      let arr = [];
+      for (let i = 0; i < this.spuSaleAttrList.length; i++) {
+        // console.log(this.spuSaleAttrList[i].spuSaleAttrValueList);
+        for (
+          let j = 0;
+          j < this.spuSaleAttrList[i].spuSaleAttrValueList.length;
+          j++
+        ) {
+          // console.log(this.spuSaleAttrList[i].spuSaleAttrValueList[j]);
+          if (
+            this.spuSaleAttrList[i].spuSaleAttrValueList[j].isChecked === "1"
+          ) {
+            arr.push(this.spuSaleAttrList[i].spuSaleAttrValueList[j]);
+          }
+        }
+      }
+      return arr;
     },
   },
 };

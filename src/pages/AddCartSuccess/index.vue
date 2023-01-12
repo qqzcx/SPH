@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import router from '@/router';
 
 export default {
   name: "AddCartSuccess",
@@ -35,12 +34,12 @@ export default {
     // console.log(this.skuId);
     // console.log(this.skuInfo);
     // console.log(this.spuSaleAttrList);
-    console.log(this.spuSaleAttrValueList);
+    // console.log(this.spuSaleAttrValueList);
   },
   methods: {
     //查看商品详情
     goDetail() {
-    this.$router.push({name:'detail',query:{skuid:this.skuId}})
+    this.$router.go(-1)
     },
    //去购物车结算
     goShopCart() {
@@ -57,29 +56,29 @@ export default {
     skuInfo() {
       return JSON.parse(sessionStorage.getItem("SKUINFO"));
     },
-    spuSaleAttrList() {
-      return JSON.parse(sessionStorage.getItem("SPUSALAATTRLIST"));
+    spuSaleAttrValueList() {
+      return JSON.parse(sessionStorage.getItem("SPUSALEATTRVALUELIST"));
     },
     //计算detail页面选择的属性值
-    spuSaleAttrValueList() {
-      let arr = [];
-      for (let i = 0; i < this.spuSaleAttrList.length; i++) {
-        // console.log(this.spuSaleAttrList[i].spuSaleAttrValueList);
-        for (
-          let j = 0;
-          j < this.spuSaleAttrList[i].spuSaleAttrValueList.length;
-          j++
-        ) {
-          // console.log(this.spuSaleAttrList[i].spuSaleAttrValueList[j]);
-          if (
-            this.spuSaleAttrList[i].spuSaleAttrValueList[j].isChecked === "1"
-          ) {
-            arr.push(this.spuSaleAttrList[i].spuSaleAttrValueList[j]);
-          }
-        }
-      }
-      return arr;
-    },
+    // spuSaleAttrValueList() {
+    //   let arr = [];
+    //   for (let i = 0; i < this.spuSaleAttrList.length; i++) {
+    //     // console.log(this.spuSaleAttrList[i].spuSaleAttrValueList);
+    //     for (
+    //       let j = 0;
+    //       j < this.spuSaleAttrList[i].spuSaleAttrValueList.length;
+    //       j++
+    //     ) {
+    //       // console.log(this.spuSaleAttrList[i].spuSaleAttrValueList[j]);
+    //       if (
+    //         this.spuSaleAttrList[i].spuSaleAttrValueList[j].isChecked === "1"
+    //       ) {
+    //         arr.push(this.spuSaleAttrList[i].spuSaleAttrValueList[j]);
+    //       }
+    //     }
+    //   }
+    //   return arr;
+    // },
   },
 };
 </script>

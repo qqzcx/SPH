@@ -1,10 +1,11 @@
 //对于axios进行二次封装
 import axios from 'axios';
-
 //引入进度条 start 进度条开始 done 进度条结束
 import nprogress from 'nprogress';
 //引入进度条样式
 import "nprogress/nprogress.css";  
+//引入 getUUID()方法生成临时游客uuid_token 然后加入请求拦截器中的header请求头中
+import { getUUID } from '@/utils/uuid_token'
 
 //1.利用axios对象的方法create,创建一个axios实例
 //2.request就是axios 只不过稍微配置一下
@@ -19,6 +20,9 @@ const requests = axios.create({
 
 requests.interceptors.request.use((config)=>{
   //config 配置对象 里面有一个属性很重要 header请求头
+  //请求头中增加一个字段userTempId 为 游客临时uuid_token
+   const uuid_token = getUUID()
+   config.headers.userTempId = uuid_token
   //进度条开始动
   nprogress.start();
   return config

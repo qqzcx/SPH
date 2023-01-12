@@ -26,10 +26,20 @@ export const reqGetSearchData = (params) => {
 
 //detail数据接口 给服务器传递一个skuid String类型 /api/item/{ skuId }
 export const reqDetailData = (skuId) => {
-  return requests({ url: `/item/${skuId}`,method:'get' })
+  return requests({ url: `/item/${skuId}`, method: 'get' })
 }
 
 //将产品添加到购物车和更新购物车数量 /api/cart/addToCart/{ skuId }/{ skuNum }
-export const reqAddOrUpdateShopCart = (skuId,skuNum) => {
+export const reqAddOrUpdateShopCart = (skuId, skuNum) => {
   return requests({ url: `/cart/addToCart/${skuId}/${skuNum}`, method: 'post' })
+}
+
+//获取购物车数据   /api/cart/cartList
+export const reqGetShopCart = () => {
+  return requests({ url: '/cart/cartList', method: 'get' })
+}
+
+//删除购物车商品 /api/cart/deleteCart/{skuId}  请求方式 DELETE
+export const reqDeleteCartById = (skuId) => {
+  return requests({ url: `/cart/deleteCart/${skuId}`,method:'delete'})
 }

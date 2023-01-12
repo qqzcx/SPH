@@ -16,9 +16,11 @@ const actions = {
   async getDetailData(context, query) {
     //query 用户dispatch派发action时传入的第二个String类型参数 skuid
     // console.log('dispatch');
-    let result = await reqDetailData(query)
+    let result = await reqDetailData(query.skuId)
     if (result.code === 200) {
       context.commit('GETDETAILDATA', result.data)
+      //调用code回调函数把code结果传回给detail组件
+      query.code(result.code)
     }
   },
   // 添加或者更新购物车
