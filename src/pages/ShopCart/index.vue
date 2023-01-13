@@ -21,6 +21,7 @@
               type="checkbox"
               name="chk_list"
               :checked="cartInfo.isChecked"
+              @click="updateCheckedById(cartInfo.skuId, cartInfo.isChecked)"
             />
           </li>
           <li class="cart-list-con2">
@@ -53,12 +54,7 @@
             }}</span>
           </li>
           <li class="cart-list-con7">
-            <a
-              href="#none"
-              class="sindelet"
-              @click="deleteCartById(cartInfo.skuId)"
-              >删除</a
-            >
+            <a class="sindelet" @click="deleteCartById(cartInfo.skuId)">删除</a>
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -67,7 +63,12 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllChecked" />
+        <input
+          class="chooseAll"
+          type="checkbox"
+          :checked="isAllChecked && cartInfoList.length !== 0"
+          @click="updateAllCheckedById"
+        />
         <span>全选</span>
       </div>
       <div class="option">
@@ -97,7 +98,7 @@ import throttle from "lodash/throttle"; //引入throttle 节流函数
 export default {
   name: "ShopCart",
   mounted() {
-    this.getData();
+        this.getData();
   },
   methods: {
     getData() {
@@ -109,7 +110,7 @@ export default {
       return changeTwoDecimal(x);
     },
     //修改购物车数量 加上节流 防止数量变成负数
-    handler:throttle (function(type, disNum, cartInfo) {
+    handler: throttle(function (type, disNum, cartInfo) {
       // console.log(type, disNum, cartInfo);
       let skuNum = 0;
       let skuId = cartInfo.skuId;
@@ -139,8 +140,8 @@ export default {
           }
         },
       });
-    },500),
-    //删除购物车数据 
+    }, 500),
+    //删除购物车数据
     deleteCartById(skuId) {
       this.$store.dispatch("deleteCartById", {
         skuId: skuId,
@@ -153,6 +154,37 @@ export default {
           }
         },
       });
+    },
+    //修改商品的选中状态
+    updateCheckedById(skuId, isChecked) {
+      let checked = 1;
+      if (isChecked === 1) {
+        checked = 0;
+      }
+      this.$store.dispatch("updateCheckedById", {
+        skuId: skuId,
+        isChecked: checked,
+        code: (result) => {
+          if (result.code === 200) {
+            // console.log(result.message);
+            this.getData(); //重新获取数据
+          } else {
+            console.log(result.message);
+          }
+        },
+      });
+    },
+    //全选或者全不选
+    updateAllCheckedById() {
+      //调用仓库中的updateAllChecked方法
+      this.$store.dispatch("updateAllChecked", this.isAllChecked).then((res) => {
+        console.log(res);
+          this.getData(); //重新获取数据
+      }).catch((res) => {
+        console.log(res);
+      })
+  
+      
     },
   },
   computed: {
