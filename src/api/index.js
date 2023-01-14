@@ -48,3 +48,13 @@ export const reqDeleteCartById = (skuId) => {
 export const reqUpdateCheckedById = (skuId, isChecked) => {
   return requests({ url: `/cart/checkCart/${skuId}/${isChecked}`, method: 'get' })
 }
+
+//获取验证码接口 /api/user/passport/sendCode/{phone}  GET
+export const reqGetCode = (phone) => {
+  return requests({ url: `/user/passport/sendCode/${phone}`, method: 'get' })
+}
+
+//完成注册接口 /api/user/passport/register  phone password code  参数类型String   POST 
+export const reqRegister = (data) => {
+  return requests({ url: `/user/passport/register`, data,method: 'post' })
+}
