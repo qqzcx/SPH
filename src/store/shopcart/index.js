@@ -6,6 +6,7 @@ const state = {
 };
 const mutations = {
   GETCARTLIST(state, cartInfoList) {
+    console.log('mutations', cartInfoList);
     state.cartInfoList = cartInfoList
     // console.log(state.cartInfoList);
   }
@@ -14,8 +15,14 @@ const actions = {
   //获取购物车列表数据
   async getCartList(context) {
     let result = await reqGetShopCart()
-    if (result.code === 200 ) {
-      context.commit('GETCARTLIST', result.data[0].cartInfoList)
+    if (result.code === 200) {
+      if (result.data[0] === undefined) {
+        //如果购物车删除到没有 返回[] 防止undefined.xxx 报错
+        context.commit('GETCARTLIST', [])
+      } else {
+        context.commit('GETCARTLIST', result.data[0].cartInfoList)
+      }
+
     }
   },
   //删除购物车数据
@@ -25,7 +32,7 @@ const actions = {
     query.code(result.code)
   },
   //修改商品的选中状态
-  async updateCheckedById(context,query) {
+  async updateCheckedById(context, query) {
     let result = await reqUpdateCheckedById(query.skuId, query.isChecked)
     //把code结果传回shopcart组件进行判断
     if (query.code) { //如果给了回调函数再调用
